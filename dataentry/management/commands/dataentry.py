@@ -10,12 +10,13 @@ class Command(BaseCommand):
         parser.add_argument('model_name', type=str)
 
     def handle(self, *args, **kwargs):
-        file_name = kwargs['file_name'].capitalize()
-        model_name = kwargs['model_name'].capitalize()
+        file_name = kwargs['file_name']
+        model_name = kwargs['model_name']
 
         # FIXED: Load model properly
         try:
             model = apps.get_model('dataentry', model_name)
+            # print("model",model)
         except LookupError:
             raise CommandError(f'Model "{model_name}" not found in app "dataentry"')
 
