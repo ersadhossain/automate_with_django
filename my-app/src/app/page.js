@@ -1,129 +1,132 @@
-"use client";
+'use client'
+import { useEffect, useState, useRef } from "react";
 
-import { useEffect, useState } from "react";
-
-export default function Home() {
+export default function DataEntryPage() {
   const [models, setModels] = useState([]);
-  const [responseMsg, setResponseMsg] = useState("");
-  const [formData, setFormData] = useState({
-    model: "",
-    file: null,
-  });
-  // console.log(models,"hello")
+  const [modelName, setModelName] = useState("");
+  const [file, setFile] = useState(null);
+  const [message, setMessage] = useState("");
 
-  // Fetch models on page load
+  const fileInputRef = useRef(null); // For clearing file input
+
+  // -----------------------------------------
+  // AUTO-HIDE MESSAGE AFTER 5 SECONDS
+  // -----------------------------------------
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/data_entry_view/")
+    if (message) {
+      const timer = setTimeout(() => {
+        setMessage("");
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
+
+  // Fetch list of models
+  useEffect(() => {
+    fetch("http://localhost:8000/data_entry_view/")
       .then((res) => res.json())
-      .then((data) => {
-        // console.log("Models from Django:", data.data);
-        setModels(data.data); // assuming Django sends { data: ["Model1", "Model2"] }
-      })
-      .catch((err) => console.error("Fetch error:", err));
+      .then((data) => setModels(data.data || []))
+      .catch(() => setMessage("Failed to load models"));
   }, []);
 
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    console.log(name, value, files);
+  // Submit form
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    if (name === "file") {
-      setFormData((prev) => ({
-        ...prev,
-        file: files && files[0],
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
-  };
-
-  // Submit file + model via POST
-  const handleSubmit = async () => {
-    if (!formData.model || !formData.file) {
-      setResponseMsg("Please select a model and upload a file.");
+    if (!modelName || !file) {
+      setMessage("Please select a model and upload a file.");
       return;
     }
 
-    // Use FormData for file upload
-    const body = new FormData();
-    body.append("model", formData.model);
-    body.append("file", formData.file);
+    const formData = new FormData();
+    formData.append("model", modelName);
+    formData.append("file", file);
 
-try {
-  const res = await fetch("http://127.0.0.1:8000/data_entry_view/", {
-    method: "POST",
-    body,
-  });
+    try {
+      const res = await fetch("http://localhost:8000/data_entry_view/", {
+        method: "POST",
+        body: formData,
+      });
 
-  const data = await res.json();
-  setResponseMsg(data.message );
+      const data = await res.json();
 
-  // Reset form fields
-  setFormData({
-    model: "",
-    file: null,
-  });
+      if (!res.ok) {
+        setMessage("Error: " + data.error);
+      } else {
+        setMessage(data.message);
 
-  // Also reset file input manually (React cannot reset file inputs automatically)
-  document.getElementById("fileInput").value = "";
-  
-} catch (err) {
-  console.error(err);
-  setResponseMsg("Upload failed.");
-}
-  }
+        // CLEAR ALL FIELDS AFTER SUCCESS
+        setModelName("");
+        setFile(null);
+        fileInputRef.current.value = "";
+      }
+    } catch (error) {
+      setMessage("Something went wrong!");
+    }
+  };
 
   return (
-    <div style={{ padding: "30px" }}>
-      <h1>Django + Next.js File Upload</h1>
+    <div style={{ maxWidth: "500px", margin: "40px auto", fontFamily: "Arial" }}>
+      <h2>Data Entry Upload</h2>
 
-      {/* Dropdown */}
-      <label>Select Model:</label>
-      <select
-        name="model"
-        value={formData.model}
-        onChange={handleChange}
-        style={{ padding: "10px", marginBottom: "20px", display: "block" }}
-      >
-        <option value="">-- Choose Model --</option>
-          {models.map((model, index) => (
-          <option key={index} value={model}>
-            {model}
-          </option>
-        ))}
-
-      </select>
-
-      {/* File Upload */}
-      <label>Upload File:</label>
-    <input
-  type="file"
-  id="fileInput"
-  name="file"
-  onChange={handleChange}
-  style={{ display: "block", marginBottom: "20px" }}
-/>
-
-
-      {/* POST Button */}
-      <button
-        onClick={handleSubmit}
-        style={{
-          padding: "10px 20px",
-          background: "black",
-          color: "white",
-          cursor: "pointer",
-        }}
-      >
-        Submit
-      </button>
-
-      {/* Response Message */}
-      {responseMsg && (
-        <p style={{ marginTop: "20px", fontWeight: "bold" }}>{responseMsg}</p>
+      {message && (
+        <p
+          style={{
+            padding: "10px",
+            background: "black",
+            color: "white",
+            borderRadius: "5px",
+            marginBottom: "15px",
+            transition: "opacity 0.3s ease"
+          }}
+        >
+          {message}
+        </p>
       )}
+
+      <form onSubmit={handleSubmit}>
+        {/* Select Model */}
+        <label>Select Model:</label>
+        <br />
+        <select
+          value={modelName}
+          onChange={(e) => setModelName(e.target.value)}
+          style={{ width: "100%", padding: "8px", margin: "10px 0" }}
+        >
+          <option value="">-- Choose Model --</option>
+          {models.map((m, i) => (
+            <option key={i} value={m}>
+              {m}
+            </option>
+          ))}
+        </select>
+
+        {/* Upload File */}
+        <label>Upload CSV File:</label>
+        <br />
+        <input
+          type="file"
+          accept=".csv"
+          onChange={(e) => setFile(e.target.files[0])}
+          ref={fileInputRef}
+          style={{ margin: "10px 0" }}
+        />
+
+        <button
+          type="submit"
+          style={{
+            padding: "10px 20px",
+            background: "brown",
+            color: "white",
+            border: "none",
+            cursor: "pointer",
+            marginTop: "10px",
+          }}
+        >
+          Submit
+        </button>
+      </form>
     </div>
   );
 }

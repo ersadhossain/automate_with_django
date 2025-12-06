@@ -4,7 +4,7 @@ from django.db import models
 class Student(models.Model):
     name = models.CharField(max_length=100)
     age = models.IntegerField()
-    roll_number = models.IntegerField(null=True)
+    roll = models.IntegerField(null=True)
 
     def __str__(self):
         return self.name

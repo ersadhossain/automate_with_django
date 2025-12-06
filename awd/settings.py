@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from  decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +21,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-7_o$st#6g2b@(v6%!j^df!gz9k8kh!88r1cbk64&ut-*bdqw3e'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG',default = False, cast = bool)
+#cast = bool means debug either true or false means it is a boolean value 
 
 ALLOWED_HOSTS = ['*']
 CORS_ALLOW_ALL_ORIGINS = True
@@ -134,3 +136,19 @@ MESSAGE_TAGS = {
     messages.ERROR: "danger",
     50: "critical",
 }
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+#email configuration
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT' ,cast = int)
+EMAIL_HOST_USER =config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = 'ersadhossain28912@gmail.com'
+# DEFAULT_TO_EMAIL =  'skofficial665@gmail.com'
+EMAIL_USE_TLS = True 
+
+import certifi
+import ssl
+
+SSL_CONTEXT = ssl.create_default_context(cafile=certifi.where())
+
+
