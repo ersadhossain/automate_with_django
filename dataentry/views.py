@@ -3,7 +3,9 @@ from rest_framework.response import Response
 from uploads.models import UploadedFile as Upload
 from django.contrib import messages
 from .tasks import dataentry_task
+from .tasks import exported_data
 from .utils import get_all_models,check_csv_error
+# from django.core.management import call_command
 
 @api_view(['POST', 'GET'])
 def data_entry_view(request):
@@ -39,3 +41,23 @@ def data_entry_view(request):
     # === GET: send list of models ===
     data = get_all_models()
     return Response({'message': "Success", 'data': data})
+
+@api_view(['POST','GET'])
+def export_data(request):
+    if request.method == 'POST':
+        model_name= request.data.get('model_name')
+        try:
+            exported_data.delay(model_name)
+            messages.success(request, 'Your data is being exported; you will be notified once done.')
+        except Exception as e :
+            raise e
+   
+    data = get_all_models()
+    return Response({'message': "Success", 'data': data})
+
+
+
+  
+        
+
+        

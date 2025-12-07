@@ -143,7 +143,7 @@ EMAIL_PORT = config('EMAIL_PORT' ,cast = int)
 EMAIL_HOST_USER =config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = 'ersadhossain28912@gmail.com'
-# DEFAULT_TO_EMAIL =  'skofficial665@gmail.com'
+DEFAULT_TO_EMAIL =  'skofficial665@gmail.com'
 EMAIL_USE_TLS = True 
 
 import certifi
