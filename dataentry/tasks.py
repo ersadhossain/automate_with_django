@@ -38,6 +38,7 @@ def exported_data(model_name):
     except Exception as e:
         raise e
     file_path = generate_csv_file(model_name)
+    # print(file_path)
     
     mail_subject = "your file export "
     message = 'your data is exported successfully '

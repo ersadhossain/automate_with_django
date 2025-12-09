@@ -24,6 +24,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('dataentry.urls')),
+    path('', include('SendEmail.urls')),
     # path('', home, name='home'),
     # path('celetry_task/',celetry_task)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

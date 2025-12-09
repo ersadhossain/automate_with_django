@@ -5,7 +5,7 @@ export default function Home() {
     { title: "Import Data", desc: "Imports data from CSV files to any table", color: "#cce5ff", url: "/import-data" },
     { title: "Export Data", desc: "Exports data to a CSV file", color: "#d4edda", url: "/export-data" },
     { title: "Compress Images", desc: "Compresses image files and reduces size", color: "#f5c6cb" },
-    { title: "Bulk Emails", desc: "Sends bulk emails to users", color: "#f8d7da" },
+    { title: "Bulk Emails", desc: "Sends bulk emails to users", color: "#f8d7da",url:"/bulk-email" },
     { title: "Email Tracking", desc: "Tracks email open and click rate", color: "#fff3cd" },
     { title: "Web Scraping", desc: "Scrapes websites for useful information", color: "#e2d9f3" },
   ];

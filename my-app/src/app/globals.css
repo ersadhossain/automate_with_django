@@ -44,3 +44,62 @@ body {
   margin: 0;
   font-size: 14px;
 }
+.card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.bulk-container {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.bulk-title {
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 30px;
+}
+
+.bulk-card {
+  background: black; /* light pink (matching your card colors) */
+  padding: 25px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+.bulk-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.bulk-form label {
+  font-weight: bold;
+  margin-top: 10px;
+  color: wheat;
+}
+
+.bulk-form input,
+.bulk-form textarea {
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+  font-size: 15px;
+}
+
+.bulk-btn {
+  margin-top: 15px;
+  padding: 12px;
+  background: #c82333;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.bulk-btn:hover {
+  background: #a71d2a;
+}
+

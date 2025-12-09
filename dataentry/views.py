@@ -45,7 +45,10 @@ def data_entry_view(request):
 @api_view(['POST','GET'])
 def export_data(request):
     if request.method == 'POST':
-        model_name= request.data.get('model_name')
+
+        model_name= request.data.get('models_name')
+        
+        
         try:
             exported_data.delay(model_name)
             messages.success(request, 'Your data is being exported; you will be notified once done.')
