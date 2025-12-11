@@ -62,8 +62,8 @@ export default function EmailTracking() {
               <td>{email.sent_at}</td>
               <td>{email.total_sent}</td>
               <td>
-                <div>0% opened</div>
-                <div>0% click</div>
+                <div>{email.open_rate}% opened</div>
+                <div>{email.click_rate}% click</div>
               </td>
             </tr>
           ))}

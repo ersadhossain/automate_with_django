@@ -9,6 +9,7 @@ class List(models.Model):
 
     def  __str__(self):
         return self.email_list
+    
     def count_email(self):
         count = Subscriber.objects.filter(email_list = self).count()
         return count
@@ -33,15 +34,15 @@ class Email(models.Model):
         return self.subject
         
     def click_rate(self):
-            total_sent=self.email_list.count_emails()
-            click_count=EmailTracking.objects.filter(email=self,click_at__isnull=False).count()
+            total_sent=self.email_list.count_email()
+            click_count=EmailTracking.objects.filter(email=self,clicked_at__isnull=False).count()
             click_rate=(click_count/total_sent)*100 if total_sent>0 else 0
             return round(click_rate,2)
 
 
     def open_rate(self):
-        total_sent=self.email_list.count_emails()
-        opened_count=EmailTracking.objects.filter(email=self,open_at__isnull=False).count()
+        total_sent=self.email_list.count_email()
+        opened_count=EmailTracking.objects.filter(email=self,opened_at__isnull=False).count()
         open_rate=(opened_count/total_sent)*100 if total_sent>0 else 0
         return round(open_rate,2)
 

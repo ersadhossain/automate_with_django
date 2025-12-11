@@ -64,10 +64,10 @@ def send_email_notification(mail_subject,message ,to_email ,attachment= None,ema
                 email_tracking =EmailTracking.objects.create(
                     email =email,
                     subscriber=subscriber,
-                    unique_id = unique_id,
-
-
-                )
+                    unique_id = unique_id,)
+                base_url = settings.BASE_URL
+                click_tracking_url = f"{base_url}/click/email/{unique_id}"
+                print('tracking url =>',click_tracking_url)
 
 
 

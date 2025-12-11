@@ -86,6 +86,8 @@ def tracking_email(request):
             "attachment": e.attachment.url if e.attachment else None,
             "sent_at": e.sent_at,
             "total_sent": total_sent,
+            "open_rate": e.open_rate(),
+            "click_rate": e.click_rate(),
             
         })
     
@@ -95,7 +97,9 @@ def tracking_email(request):
 def email_stats(request, id):
     try:
         email = Email.objects.get(id=id)
+        
         sent = Sent.objects.get(email=email)
+        
         
         data = {
             "id": email.id,
@@ -104,7 +108,9 @@ def email_stats(request, id):
             "list_name": email.email_list.email_list,
             "sent_at": email.sent_at,
             "attachment": email.attachment.url,
-            "total_sent":sent.total_sent
+            "total_sent":sent.total_sent,
+            "open_rate": email.open_rate(),
+            "click_rate": email.click_rate()
             
         }
         return Response({"data":data})

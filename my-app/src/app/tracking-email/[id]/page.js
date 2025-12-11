@@ -39,8 +39,8 @@ export default async function EmailStats(props) {
         </div>
 
         <div className="card right-card">
-          <h4>Opened: 0%</h4>
-          <h4>Clicked: 0%</h4>
+          <h4>Opened: {result.open_rate}%</h4>
+          <h4>Clicked: {result.click_rate}%</h4>
         </div>
       </div>
     </div>

@@ -151,5 +151,8 @@ import certifi
 import ssl
 
 SSL_CONTEXT = ssl.create_default_context(cafile=certifi.where())
+CSRF_TRUSTED_ORIGINS =['https://monica-eudiometrical-monarchally.ngrok-free.dev']
+BASE_URL = ' https://monica-eudiometrical-monarchally.ngrok-free.dev'
+
 
 
