@@ -1,8 +1,10 @@
 from django.contrib import admin
-from .models import List,Email,Subscriber
+from .models import List,Email,Subscriber,EmailTracking,Sent
 
 
 # Register your models here.
 admin.site.register(List)
 admin.site.register(Email)
 admin.site.register(Subscriber)
+admin.site.register(EmailTracking)
+admin.site.register(Sent)

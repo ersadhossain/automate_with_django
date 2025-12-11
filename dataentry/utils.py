@@ -1,4 +1,6 @@
 # from django.utxils import timezone
+import hashlib
+import time
 from django.apps import apps
 from django.core.management import CommandError
 import csv
@@ -6,8 +8,7 @@ import os
 from django.conf import settings
 from django.core.mail import EmailMessage
 from django.conf import settings
-
-
+from SendEmail.models import Email,Sent,Subscriber,EmailTracking
 
 
 def get_all_models():
@@ -50,13 +51,37 @@ def check_csv_error(file_path, model):
         raise e
 
     return models
-def send_email_notification(mail_subject,message ,to_email ,attachment= None):
+def send_email_notification(mail_subject,message ,to_email ,attachment= None,email_id = None):
     try:
         from_email = settings.DEFAULT_FROM_EMAIL
-        mail = EmailMessage(mail_subject,message,from_email,to=to_email,attachments=None)
-        if attachment:
-            mail.attach_file(attachment)
-        mail.send()
+        for recipient_email in to_email:
+            if email_id:
+                email = Email.objects.get(pk = email_id)
+                subscriber = Subscriber.objects.get(email_list = email.email_list,email_address = recipient_email)
+                timestamp = str(time.time())
+                data_to_hash = f"{recipient_email}{timestamp}"
+                unique_id =hashlib.sha256(data_to_hash.encode()).hexdigest()
+                email_tracking =EmailTracking.objects.create(
+                    email =email,
+                    subscriber=subscriber,
+                    unique_id = unique_id,
+
+
+                )
+
+
+
+            mail = EmailMessage(mail_subject,message,from_email,to=to_email,attachments=None)
+            if attachment:
+                mail.attach_file(attachment)
+                mail.send()
+                
+        
+        if email_id:
+            sent = Sent()
+            sent.email = email
+            sent.total_sent = email.email_list.count_email()
+            sent.save()
     except Exception as e:
         raise (e)
 
